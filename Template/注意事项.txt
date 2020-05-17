@@ -1,0 +1,91 @@
+
+8.2.1 Event Recorder 的 特色
+Event Recorder
+的 特色 主要有以下几点：
+1. 提升应用程序动态执行期间的检测能力。
+2. 支持的事件类型 滤除机制，比如 运行 错误 、 API 调用 、 内部操作和操作信息的区分。
+3. 可以在任务中 、 RTOS 内核中和中断服务程序中任意调用。
+4. 对于 带 ITM 功能 的 C ortex M3/M4/M7/M33 内核 芯片， 执行记录期间，全程无需开关中断操作。
+对于不带
+I TM 功能 的 C ortex M0/M0+/M23 是需要开关中断的。
+5. 支持 printf 重定向。
+6. 各种 link 通吃，支持 SWD 接口 或者 JTA G 接口 方式的 J LINK 、 STLINK 、 ULINK 和 CMSIS DAP 。
+7. 对于 带 DWT 时钟 周期计数器 功能 的 C ortex M3/M4/M7/M33 内核 芯片 创建时间戳时，可以有效
+降低系统 负担， 无需专用定时器来实现。
+8. Event Recorder 执行时间具有时间确定性，即执行的时间是确定的，而且执行速度超快，因此，实
+际产品中的代码依然可以带有这部分，无需创建 debug 和 release 两种版本。
+9. RTX5 及其 所有中间件都支持 E vent Recorder 调试。
+只要是 MDK 支持 的 调试 下载器， 基本 都支持 E vent Recorder ，本教程测试 了 JLINK STLINK 和
+CMSIS DAP 。
+务必 使用 MDK5.25 及其以上 版本 。
+使用 ARM_Compiler 软件包 V 1.4.0 及其 以上版本 
+CMSIS 软件包 要是 使用 V5.3.0 及其以上 版本 
+/****************************************************
+事件记录器 EventRecorder
+注意事项:
+要关闭自己写的printf重定义
+点击Manage Run-Time Environment(MRTE)图标
+选择Compilder选项(勾选)
+I/O子项将STDOUT(勾选)
+-->参数改为(EVR)<--
+
+要打开view->Periodic Window Updata数据自动更新
+Analysis Windows -> Event有关窗口
+Serial Windows -> printf(debug)
+使用的函数
+uint32_t EventRecorderInitialize (uint32_t recording, uint32_t start);
+
+// Defines for parameter recording for Event Recorder Setup Functions
+#define EventRecordNone         0x00U       ///< Record events is disabled
+#define EventRecordError        0x01U       ///< Record events with level \ref EventLevelError
+#define EventRecordAPI          0x02U       ///< Record events with level \ref EventLevelAPI
+#define EventRecordOp           0x04U       ///< Record events with level \ref EventLevelOp
+#define EventRecordDetail       0x08U       ///< Record events with level \ref EventLevelDetail
+#define EventRecordAll          0x0FU       ///< Record events with any level
+
+
+uint32_t EventRecorderInitialize(EventRecordAll, 1U);//初始化
+uint32_t EventRecorderStart(void);        //开启
+uint32_t EventRecorderStop (void)        //关闭
+EventStartA(slot)   /EventStartB(slot) 
+EventStartC(slot)   /EventStartD(slot)              
+//时间统计四个开始函数
+//slot(0-15)
+EventStopA(slot)   /EventStopB(slot) 
+EventStopC(slot)   /EventStopD(slot)   
+//时间统计四个结束函数
+//slot(0-15)
+EventStartXv(slot, v1, v2) //X(A->D)
+EventStopXv(slot, v1, v2) //X(A->D)
+
+uint32_t EventRecord2 (uint32_t id, uint32_t val1, uint32_t val2);       
+ //发送两个数据
+uint32_t EventRecord4 (uint32_t id,
+                       uint32_t val1, uint32_t val2, uint32_t val3, uint32_t val4);
+//发送四个数据
+uint32_t EventRecordData (uint32_t id, const void *data, uint32_t len)//发送字符串
+
+printf//也可以直接使用
+****************************************************/
+
+
+◆友情提示：如果您想以后及时免费的收到正点原子所有开发板资料更新增加通知，请关注微信公众平台：
+ 2种添加方法：（动动手提升您的学习效率，惊喜不断哦）
+（1）打开微信->添加朋友->公众号->输入“正点原子”->点击关注
+（2）打开微信->添加朋友->输入“alientek_stm32"->点击关注
+ 具体微信添加方法，请参考帖子：http://www.openedv.com/posts/list/45157.htm
+ 
+
+
+						
+
+						淘宝店铺： http://openedv.taobao.com
+						           http://eboard.taobao.com
+						公司网站：www.alientek.com
+						技术论坛：www.openedv.com
+                                                微信公众平台：正点原子
+						电话：020-38271790
+						传真：020-36773971
+						广州市星翼电子科技有限公司
+						正点原子@ALIENTEK
+						     2016-6月
